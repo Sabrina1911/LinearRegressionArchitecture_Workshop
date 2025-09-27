@@ -1,0 +1,42 @@
+﻿# Pipeline defaults for Predictive Maintenance Orchestration (Lab 1 Refactor)
+
+# --- Data Sources ---
+train_table: readings_fact_csv        # TRAIN table name in DB (from .env DATABASE_URL)
+test_csv: data/raw/metadata_wilk_clean.csv
+
+# --- Data Prep ---
+cadence_s: 1.0                        # expected sample cadence in seconds
+axis_policy: all                      # axes to include; e.g., "topk:4" or "all"
+
+# --- Model Selection ---
+model_type: auto                      # auto = choose best per axis (linear/mean)
+similarity_check: true                # align TESTTRAIN (affine)
+
+# --- Threshold Discovery ---
+iqr_k: 1.5                            # IQR multiplier (robust minC/maxC)
+t_mult: 3                             # dwell multiplier  T_sec
+
+# --- Visualization ---
+plot: both                            # {none, overlays, summary, both}
+overlay_topk: 8                       # show top-K axes in overlay
+summary_decimate: 3                   # declutter factor (every Nth point)
+summary_smooth_win: 5                 # rolling median window for plots
+
+# --- Artifacts & Reporting ---
+artifacts_dir: artifacts              # where models/thresholds are saved
+reports_dir: reports                  # where PDF summaries go
+log_dir: logs                         # rotating logs
+
+# --- Playback defaults (optional) ---
+playback:
+  tick: 2                             # seconds per step
+  window: 45                          # sliding window size (sec)
+  stacked: 1                          # stacked view (1=true)
+  zmode: 0                            # 0=current-mode, 1=z-mode
+  topk: 8                             # noisiest axes to show
+
+# --- Optional MLflow logging ---
+mlflow:
+  enabled: false
+  tracking_uri: ""                    # e.g., http://127.0.0.1:5000
+  experiment_name: PredMaint_Lab1
